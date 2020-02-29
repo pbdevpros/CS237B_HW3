@@ -32,6 +32,7 @@ class NN(tf.keras.Model):
         ######### Your code starts here #########
         # We want to perform a forward-pass of the network. Using the weights and biases, this function should give the network output for x where:
         # x is a (? x |O|) tensor that keeps a batch of observations
+        # IMPORTANT: First two columns of the output tensor must correspond to the mean vector!
         
         
         
