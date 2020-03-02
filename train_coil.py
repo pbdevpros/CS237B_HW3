@@ -32,6 +32,7 @@ class NN(tf.keras.Model):
         # We want to perform a forward-pass of the network. Using the weights and biases, this function should give the network output for (x,u) where:
         # - x is a (? x |O|) tensor that keeps a batch of observations
         # - u is a (? x 1) tensor (a vector indeed) that keeps the high-level commands (goals) to denote which branch of the network to use 
+        # FYI: For the intersection scenario, u=0 means the goal is to turn left, u=1 straight, and u=2 right. 
         # HINT 1: Looping over all data samples may not be the most computationally efficient way of doing branching
         # HINT 2: While implementing this, we found tf.math.equal and tf.cast useful. This is not necessarily a requirement though.
         
