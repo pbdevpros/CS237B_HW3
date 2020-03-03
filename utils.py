@@ -32,8 +32,7 @@ def load_data(args):
         np_data = [np.load('data/' + scenario_name + '_' + dn + '.npy') for dn in goals[scenario_name]]
         u = np.vstack([np.ones((np_data[i].shape[0],1))*i for i in range(len(np_data))])
         np_data = np.vstack(np_data)
-        np_data = np.concatenate((np_data,u), axis=1)
-        data['u_train'] = np_data[:,-1].astype('uint8').reshape(-1,1)
+        data['u_train'] = np.array(u).astype('uint8').reshape(-1,1)
     else:
         assert data_name in goals[scenario_name], '--data argument is invalid!'
         np_data = np.load('data/' + scenario_name + '_' + data_name + '.npy')
