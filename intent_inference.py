@@ -40,10 +40,10 @@ if __name__ == '__main__':
                 action = [interactive_policy.steering, interactive_policy.throttle]
             elif scenario_name == 'circularroad':
                 opt_action = optimal_act_circularroad(env,0) # desired lane doesn't matter for throttle
-                action = [interactive_policy.steering, opt_a[0,1]]
+                action = [interactive_policy.steering, opt_action[0,1]]
             elif scenario_name == 'lanechange':
                 opt_action = optimal_act_lanechange(env,0) # desired lane doesn't matter for throttle
-                action = [interactive_policy.steering, opt_a[0,1]]
+                action = [interactive_policy.steering, opt_action[0,1]]
             obs = np.array(obs).reshape(1,-1)
             
             
