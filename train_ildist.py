@@ -48,7 +48,7 @@ def loss(y_est, y):
     # - y is the actions the expert took for the corresponding batch of observations
     # At the end your code should return the scalar loss value.
     # HINT: You may find the classes of tensorflow_probability.distributions (imported as tfd) useful.
-    #       In particular, we used MultivariateNormalTriL, but it is not the only way.
+    #       In particular, you can use MultivariateNormalFullCovariance or MultivariateNormalTriL, but they are not the only way.
     
     
     
