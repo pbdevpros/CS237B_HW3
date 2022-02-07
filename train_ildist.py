@@ -1,11 +1,10 @@
 import numpy as np
-import tensorflow as tf1
-import tensorflow.compat.v2 as tf
+import tensorflow as tf
 from tensorflow_probability import distributions as tfd
 import argparse
 from utils import *
 
-tf1.compat.v1.enable_eager_execution()
+tf.config.run_functions_eagerly(True)
 
 class NN(tf.keras.Model):
     def __init__(self, in_size, out_size):
@@ -16,12 +15,10 @@ class NN(tf.keras.Model):
         # - in_size is dim(O)
         # - out_size is dim(A) = 2
         # IMPORTANT: out_size is still 2 in this case, because the action space is 2-dimensional. But your network will output some other size as it is outputing a distribution!
-        # HINT 1: An example of this was given to you in Homework 1's Problem 1 in svm_tf.py. Now you will implement a multi-layer version.
-        # HINT 2: You should use either of the following for weight initialization:
-        #           - tf1.contrib.layers.xavier_initializer (this is what we tried)
-        #           - tf.keras.initializers.GlorotUniform (supposedly equivalent to the previous one)
-        #           - tf.keras.initializers.GlorotNormal
-        #           - tf.keras.initializers.he_uniform or tf.keras.initializers.he_normal
+        # HINT: You should use either of the following for weight initialization:
+        #         - tf.keras.initializers.GlorotUniform (this is what we tried)
+        #         - tf.keras.initializers.GlorotNormal
+        #         - tf.keras.initializers.he_uniform or tf.keras.initializers.he_normal
         
         
         
@@ -31,7 +28,7 @@ class NN(tf.keras.Model):
         x = tf.cast(x, dtype=tf.float32)
         ######### Your code starts here #########
         # We want to perform a forward-pass of the network. Using the weights and biases, this function should give the network output for x where:
-        # x is a (? x |O|) tensor that keeps a batch of observations
+        # x is a (?, |O|) tensor that keeps a batch of observations
         # IMPORTANT: First two columns of the output tensor must correspond to the mean vector!
         
         
@@ -81,7 +78,6 @@ def nn(data, args):
         # 3. Based on the loss calculate the gradient for all weights
         # 4. Run an optimization step on the weights.
         # Helpful Functions: tf.GradientTape(), tf.GradientTape.gradient(), tf.keras.Optimizer.apply_gradients
-        # HINT: You did the exact same thing in Homework 1! It is just the networks weights and biases that are different.
        
        
        

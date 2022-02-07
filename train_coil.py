@@ -1,10 +1,9 @@
 import numpy as np
-import tensorflow as tf1
-import tensorflow.compat.v2 as tf
+import tensorflow as tf
 import argparse
 from utils import *
 
-tf1.compat.v1.enable_eager_execution()
+tf.config.run_functions_eagerly(True)
 
 class NN(tf.keras.Model):
     def __init__(self, in_size, out_size):
@@ -14,12 +13,10 @@ class NN(tf.keras.Model):
         # We want to define and initialize the weights & biases of the CoIL network.
         # - in_size is dim(O)
         # - out_size is dim(A) = 2
-        # HINT 1: An example of this was given to you in Homework 1's Problem 1 in svm_tf.py. Now you will implement a multi-layer version.
-        # HINT 2: You should use either of the following for weight initialization:
-        #           - tf1.contrib.layers.xavier_initializer (this is what we tried)
-        #           - tf.keras.initializers.GlorotUniform (supposedly equivalent to the previous one)
-        #           - tf.keras.initializers.GlorotNormal
-        #           - tf.keras.initializers.he_uniform or tf.keras.initializers.he_normal
+        # HINT: You should use either of the following for weight initialization:
+        #         - tf.keras.initializers.GlorotUniform (this is what we tried)
+        #         - tf.keras.initializers.GlorotNormal
+        #         - tf.keras.initializers.he_uniform or tf.keras.initializers.he_normal
         
         
         
@@ -30,8 +27,8 @@ class NN(tf.keras.Model):
         u = tf.cast(u, dtype=tf.int8)
         ######### Your code starts here #########
         # We want to perform a forward-pass of the network. Using the weights and biases, this function should give the network output for (x,u) where:
-        # - x is a (? x |O|) tensor that keeps a batch of observations
-        # - u is a (? x 1) tensor (a vector indeed) that keeps the high-level commands (goals) to denote which branch of the network to use 
+        # - x is a (?, |O|) tensor that keeps a batch of observations
+        # - u is a (?, 1) tensor (a vector indeed) that keeps the high-level commands (goals) to denote which branch of the network to use 
         # FYI: For the intersection scenario, u=0 means the goal is to turn left, u=1 straight, and u=2 right. 
         # HINT 1: Looping over all data samples may not be the most computationally efficient way of doing branching
         # HINT 2: While implementing this, we found tf.math.equal and tf.cast useful. This is not necessarily a requirement though.
@@ -81,7 +78,6 @@ def nn(data, args):
         # 3. Based on the loss calculate the gradient for all weights
         # 4. Run an optimization step on the weights.
         # Helpful Functions: tf.GradientTape(), tf.GradientTape.gradient(), tf.keras.Optimizer.apply_gradients
-        # HINT: You did the exact same thing in Homework 1! It is just the networks weights and biases that are different.
         
         
 
