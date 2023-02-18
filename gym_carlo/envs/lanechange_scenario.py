@@ -43,9 +43,9 @@ class LanechangeScenario(gym.Env):
            
         self.ego = self.init_ego.copy()
 
-        self.ego.center = Point(BUILDING_WIDTH + SIDEWALK_WIDTH + 2 + np.random.rand()*(2*LANE_WIDTH + LANE_MARKER_WIDTH - 4), self.np_random.rand()* MAP_HEIGHT/10.)
+        self.ego.center = Point(BUILDING_WIDTH + SIDEWALK_WIDTH + 2 + np.random.rand()*(2*LANE_WIDTH + LANE_MARKER_WIDTH - 4), self.np_random.uniform()* MAP_HEIGHT/10.)
         self.ego.heading += np.random.randn()*0.1
-        self.ego.velocity = Point(0, self.np_random.rand()*10)
+        self.ego.velocity = Point(0, self.np_random.uniform()*10)
        
         self.targets = []
         self.targets.append(Point(BUILDING_WIDTH + SIDEWALK_WIDTH + LANE_WIDTH/2., MAP_HEIGHT))

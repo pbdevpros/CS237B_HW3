@@ -46,13 +46,13 @@ class CircularroadScenario(gym.Env):
         self.world = World(self.dt, width = MAP_WIDTH, height = MAP_HEIGHT, ppm = PPM)
            
         self.ego = self.init_ego.copy()
-        rnd_theta  = self.np_random.rand()*2*np.pi
-        rnd_radius = self.np_random.rand()*(2*LANE_WIDTH + LANE_MARKER_WIDTH - 2*self.ego.size.y) + INNER_BUILDING_RADIUS + self.ego.size.y
-        rnd_speed  = 2.5 + self.np_random.rand()*5
+        rnd_theta  = self.np_random.uniform()*2*np.pi
+        rnd_radius = self.np_random.uniform()*(2*LANE_WIDTH + LANE_MARKER_WIDTH - 2*self.ego.size.y) + INNER_BUILDING_RADIUS + self.ego.size.y
+        rnd_speed  = 2.5 + self.np_random.uniform()*5
         
         self.ego.center = Point(rnd_radius*np.cos(rnd_theta), rnd_radius*np.sin(rnd_theta)) + Point(MAP_WIDTH/2., MAP_HEIGHT/2.)
         self.ego.heading = np.mod(rnd_theta + np.pi/2., 2*np.pi) # CARLO assumes 90 degrees is +y direction
-        self.ego.velocity = Point(rnd_speed*np.cos(self.ego.heading) + 0.01*self.np_random.rand()-0.005, rnd_speed*np.cos(self.ego.heading) + 0.01*self.np_random.rand()-0.005) # a little noise is good for data collection
+        self.ego.velocity = Point(rnd_speed*np.cos(self.ego.heading) + 0.01*self.np_random.uniform()-0.005, rnd_speed*np.cos(self.ego.heading) + 0.01*self.np_random.uniform()-0.005) # a little noise is good for data collection
                
         # To create a circular road, we will add a CircleBuilding and then a RingBuilding around it
         self.circle_building = CircleBuilding(Point(MAP_WIDTH/2., MAP_HEIGHT/2.), INNER_BUILDING_RADIUS, 'gray80')

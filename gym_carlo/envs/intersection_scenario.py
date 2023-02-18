@@ -45,9 +45,9 @@ class IntersectionScenario(gym.Env):
            
         self.ego = self.init_ego.copy()
 
-        self.intersection_y = self.np_random.rand()*MAP_HEIGHT/2. + MAP_HEIGHT/4.
-        self.ego.center += Point(self.np_random.rand() - 0.5, self.np_random.rand()*(self.intersection_y-MAP_HEIGHT/10.))
-        self.ego.velocity = Point(0, self.np_random.rand()*5)
+        self.intersection_y = self.np_random.uniform()*MAP_HEIGHT/2. + MAP_HEIGHT/4.
+        self.ego.center += Point(self.np_random.uniform() - 0.5, self.np_random.uniform()*(self.intersection_y-MAP_HEIGHT/10.))
+        self.ego.velocity = Point(0, self.np_random.uniform()*5)
        
         self.targets = []
         self.targets.append(Point(0., self.intersection_y + LANE_WIDTH/2. + LANE_MARKER_WIDTH/2.))
