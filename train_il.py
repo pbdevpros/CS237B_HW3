@@ -54,17 +54,16 @@ class NN(tf.keras.Model):
         #         - tf.keras.initializers.GlorotUniform (this is what we tried)
         #         - tf.keras.initializers.GlorotNormal
         #         - tf.keras.initializers.he_uniform or tf.keras.initializers.he_normal
-        initializer = tf.keras.initializers.GlorotUniform()
         # in_size = 5
         self.internal_layers = [
             tf.keras.layers.Flatten(),
-            tf.keras.layers.Dense(1024, kernel_initializer=initializer, activation='relu'),
+            tf.keras.layers.Dense(1024, kernel_initializer=tf.keras.initializers.GlorotUniform(), activation='relu'),
             # tf.keras.layers.Dropout(0.1),
-            tf.keras.layers.Dense(512, kernel_initializer=initializer, activation='relu'),
+            tf.keras.layers.Dense(512, kernel_initializer=tf.keras.initializers.GlorotUniform(), activation='relu'),
             # tf.keras.layers.Dropout(0.2),
-            tf.keras.layers.Dense(64, kernel_initializer=initializer, activation='relu'),
+            tf.keras.layers.Dense(64, kernel_initializer=tf.keras.initializers.GlorotUniform(), activation='relu'),
         ]
-        self.layer_output = tf.keras.layers.Dense(out_size, kernel_initializer=initializer)
+        self.layer_output = tf.keras.layers.Dense(out_size, kernel_initializer=tf.keras.initializers.GlorotUniform())
         ########## Your code ends here ##########
 
     def call(self, x):
