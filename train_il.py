@@ -3,8 +3,23 @@ import numpy as np
 import argparse
 import tensorflow as tf
 from utils import *
+## TODO: debug
+import pickle
+import datetime
+## debug
 
 tf.config.run_functions_eagerly(True)
+
+## TODO: debug
+def save_array(arr, path):
+    arr = np.array(arr)
+    with open(path, 'wb') as f:
+        pickle.dump(arr, f)
+
+def load_array(path):
+    with open(path, "rb") as f:
+        return pickle.load(f)
+## debug
 
 ## TODO: Remove used for plotting
 def plot_metric(x, y, title, legends = []):
@@ -22,7 +37,8 @@ def plot_metric(x, y, title, legends = []):
     plt.xlim([np.min(x[:]), np.max(x[:])])
     plt.ylim([np.min(y[:])*.5, np.max(y[:])*1.5])
     plt.rc({'font.size': 42})
-    plt.show()
+    # plt.show()
+    plt.savefig( './images/' + title + ".png")
 ####
 
 
@@ -71,12 +87,12 @@ def loss(y_est, y):
     # - y is the actions the expert took for the corresponding batch of observations
     # At the end your code should return the scalar loss value.
     # HINT: Remember, you can penalize steering (0th dimension) and throttle (1st dimension) unequally
-    sample_weights = tf.constant(([0.7, 0.3]))
+    sample_weights = tf.constant(([0.9, 0.1]))
     y = y * sample_weights
     y_est = y_est * sample_weights
-    norm = tf.sqrt(tf.reduce_sum(tf.square(y - y_est), 1))
-    return tf.reduce_mean(norm)
-    # return tf.reduce_mean(tf.square(y - y_est))
+    # norm = tf.sqrt(tf.reduce_sum(tf.square(y - y_est), 1))
+    # return tf.reduce_mean(norm)
+    return tf.reduce_mean(tf.square(y - y_est))
     # return tf.math.reduce_euclidean_norm(tf.y_est - y)
     # kl = tf.keras.losses.KLDivergence()
     # l = kl(y, y_est)
@@ -149,7 +165,9 @@ def nn(data, args):
     #  = history.history['accuracy']
     x  = [ np.linspace(0, length, length) ] 
         
-    plot_metric(x, y, 'Training loss of CNNs using different loss functions', [ nn_model.name ])
+    info_string = "{}-goal={}-epochs={}-lr={}".format(args.scenario, args.epochs, args.goal, args.lr)
+    save_array(y, "./pickles/" + nn_model.name + info_string + datetime.datetime.now().strftime("%H-%M-%s") + ".pickle")
+    plot_metric(x, y, 'MSE ' + info_string + datetime.datetime.now().strftime("%H-%M-%s"), [ nn_model.name ])
     ###### 
     nn_model.save_weights('./policies/' + args.scenario.lower() + '_' + args.goal.lower() + '_IL')
 
