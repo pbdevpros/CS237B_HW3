@@ -5,6 +5,26 @@ from utils import *
 
 tf.config.run_functions_eagerly(True)
 
+## TODO: Remove used for plotting
+def plot_metric(x, y, title, legends = []):
+    import matplotlib.pyplot as plt
+    if type(x) != type([]): x = [x]
+    if type(y) != type([]): y = [y]
+    assert(len(x) == len(y))
+    colors = [ 'g-', 'r-', 'b-']
+    for i in range(len(x)):
+        plt.plot(x[i], y[i], colors[i % len(colors)])
+    plt.legend(legends, loc='upper right')
+    plt.title(title)
+    plt.rcParams["figure.figsize"] = (30, 30)
+    plt.grid()
+    plt.xlim([np.min(x[:]), np.max(x[:])])
+    plt.ylim([np.min(y[:])*.5, np.max(y[:])*1.5])
+    plt.rc({'font.size': 42})
+    plt.show()
+####
+
+
 class NN(tf.keras.Model):
     def __init__(self, in_size, out_size):
         super(NN, self).__init__()
@@ -21,11 +41,11 @@ class NN(tf.keras.Model):
         # in_size = 5
         self.internal_layers = [
             tf.keras.layers.Flatten(),
-            tf.keras.layers.Dense(1024, kernel_initializer=initializer),
+            tf.keras.layers.Dense(1024, kernel_initializer=initializer, activation='relu'),
             # tf.keras.layers.Dropout(0.1),
-            tf.keras.layers.Dense(512, kernel_initializer=initializer),
+            tf.keras.layers.Dense(512, kernel_initializer=initializer, activation='relu'),
             # tf.keras.layers.Dropout(0.2),
-            tf.keras.layers.Dense(64, kernel_initializer=initializer),
+            tf.keras.layers.Dense(64, kernel_initializer=initializer, activation='relu'),
         ]
         self.layer_output = tf.keras.layers.Dense(out_size, kernel_initializer=initializer)
         ########## Your code ends here ##########
@@ -50,8 +70,12 @@ def loss(y_est, y):
     # - y is the actions the expert took for the corresponding batch of observations
     # At the end your code should return the scalar loss value.
     # HINT: Remember, you can penalize steering (0th dimension) and throttle (1st dimension) unequally
-    return tf.reduce_mean(tf.square(y - y_est))
+    # return tf.reduce_mean(tf.square(y - y_est))
     # return tf.math.reduce_euclidean_norm(tf.y_est - y)
+    kl = tf.keras.losses.KLDivergence()
+    l = kl(y, y_est)
+    # return tf.reduce_all(l)
+    return l
     ########## Your code ends here ##########
     
 
@@ -71,6 +95,7 @@ def nn(data, args):
     optimizer = tf.keras.optimizers.Adam(learning_rate=args.lr)
 
     train_loss = tf.keras.metrics.Mean(name='train_loss')
+    # tb_callback.set_model(nn_model)
 
     @tf.function
     def train_step(x, y):
@@ -99,14 +124,27 @@ def nn(data, args):
 
     train_data = tf.data.Dataset.from_tensor_slices((data['x_train'], data['y_train'])).shuffle(100000).batch(params['train_batch_size'])
 
+    losses = []
     for epoch in range(args.epochs):
-        # Reset the metrics at the start of the next epoch
+        # Reset the metrics at the start of the next epoch        
         train_loss.reset_states()
 
         train(train_data)
 
         template = 'Epoch {}, Loss: {}'
         print(template.format(epoch + 1, train_loss.result()))
+        losses.append(train_loss.result())
+
+
+    #### TODO: REMOVE, USED for PLOTTING ####
+    # for history in histories:
+    length = len(losses)
+    y = [ losses ]
+    #  = history.history['accuracy']
+    x  = [ np.linspace(0, length, length) ] 
+        
+    plot_metric(x, y, 'Training loss of CNNs using different loss functions', [ nn_model.name ])
+    ###### 
     nn_model.save_weights('./policies/' + args.scenario.lower() + '_' + args.goal.lower() + '_IL')
 
 
