@@ -87,7 +87,7 @@ def loss(y_est, y):
     # - y is the actions the expert took for the corresponding batch of observations
     # At the end your code should return the scalar loss value.
     # HINT: Remember, you can penalize steering (0th dimension) and throttle (1st dimension) unequally
-    sample_weights = tf.constant(([0.9, 0.1]))
+    sample_weights = tf.constant(([0.8, 0.2]))
     y = y * sample_weights
     y_est = y_est * sample_weights
     # norm = tf.sqrt(tf.reduce_sum(tf.square(y - y_est), 1))
@@ -167,7 +167,7 @@ def nn(data, args):
         
     info_string = "{}-goal={}-epochs={}-lr={}".format(args.scenario, args.epochs, args.goal, args.lr)
     save_array(y, "./pickles/" + nn_model.name + info_string + datetime.datetime.now().strftime("%H-%M-%s") + ".pickle")
-    plot_metric(x, y, 'MSE ' + info_string + datetime.datetime.now().strftime("%H-%M-%s"), [ nn_model.name ])
+    plot_metric(x, y, 'MSE (0.8, 0.2)' + info_string + datetime.datetime.now().strftime("%H-%M-%s"), [ nn_model.name ])
     ###### 
     nn_model.save_weights('./policies/' + args.scenario.lower() + '_' + args.goal.lower() + '_IL')
 
