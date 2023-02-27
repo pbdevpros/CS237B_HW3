@@ -18,6 +18,12 @@ class NN(tf.keras.Model):
         #         - tf.keras.initializers.GlorotNormal
         #         - tf.keras.initializers.he_uniform or tf.keras.initializers.he_normal
         initializer = tf.keras.initializers.GlorotUniform()
+        print("Size of dim(O) is: {}".format(in_size))
+        # self.layerCNNs = [
+        #     tf.keras.layers.Conv2D(32, 4, activation='relu'), # Conv layer with 32 3x3 filters
+        #     kernel_initializer=initializer
+
+        # ]
         self.layer0 = tf.keras.layers.Flatten()
         self.layer1 = tf.keras.layers.Dense(128, kernel_initializer=initializer)
         self.layer2 = tf.keras.layers.Dropout(0.1)
