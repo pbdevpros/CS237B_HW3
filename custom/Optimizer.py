@@ -25,8 +25,8 @@ class SGD(Optimizer):
 
 
 def main():
-    f = lambda x: x ** 2 
-    opt = SGD(f, 0.05, 0.0001, 1000000)
+    gradient = lambda x: 2 * x
+    opt = SGD(gradient, 0.05, 0.0001, 1000000)
     result = opt.optimize(10)
     print(result)
 

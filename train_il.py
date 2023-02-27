@@ -17,9 +17,12 @@ class NN(tf.keras.Model):
         #         - tf.keras.initializers.GlorotUniform (this is what we tried)
         #         - tf.keras.initializers.GlorotNormal
         #         - tf.keras.initializers.he_uniform or tf.keras.initializers.he_normal
-
-
-
+        initializer = tf.keras.initializers.GlorotUniform()
+        self.layer0 = tf.keras.layers.Flatten()
+        self.layer1 = tf.keras.layers.Dense(128, kernel_initializer=initializer)
+        self.layer2 = tf.keras.layers.Dropout(0.1)
+        self.layer3 = tf.keras.layers.Dense(64, kernel_initializer=initializer)
+        self.layer_output = tf.keras.layers.Dense(out_size, kernel_initializer=initializer)
         ########## Your code ends here ##########
 
     def call(self, x):
@@ -27,9 +30,11 @@ class NN(tf.keras.Model):
         ######### Your code starts here #########
         # We want to perform a forward-pass of the network. Using the weights and biases, this function should give the network output for x where:
         # x is a (?,|O|) tensor that keeps a batch of observations
-
-
-
+        x = self.layer0(x)
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        return self.layer_output(x)
         ########## Your code ends here ##########
 
 
@@ -41,9 +46,8 @@ def loss(y_est, y):
     # - y is the actions the expert took for the corresponding batch of observations
     # At the end your code should return the scalar loss value.
     # HINT: Remember, you can penalize steering (0th dimension) and throttle (1st dimension) unequally
-
-
-
+    return tf.reduce_mean(tf.square(y - y_est))
+    # return tf.math.reduce_euclidean_norm(tf.y_est - y)
     ########## Your code ends here ##########
     
 
@@ -73,9 +77,13 @@ def nn(data, args):
         # 3. Based on the loss calculate the gradient for all weights
         # 4. Run an optimization step on the weights.
         # Helpful Functions: tf.GradientTape(), tf.GradientTape.gradient(), tf.keras.Optimizer.apply_gradients
-        
-        
-
+        with tf.GradientTape() as tape:
+            # forward pass
+            y_est = nn_model(x, training=True) # use dropout
+            # compute the loss
+            current_loss = loss(y_est, y)
+        grads = tape.gradient(current_loss, nn_model.trainable_variables)
+        optimizer.apply_gradients(zip(grads, nn_model.trainable_variables))
         ########## Your code ends here ##########
 
         train_loss(current_loss)
