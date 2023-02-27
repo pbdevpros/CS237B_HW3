@@ -1,3 +1,4 @@
+from random import sample
 import numpy as np
 import argparse
 import tensorflow as tf
@@ -70,12 +71,15 @@ def loss(y_est, y):
     # - y is the actions the expert took for the corresponding batch of observations
     # At the end your code should return the scalar loss value.
     # HINT: Remember, you can penalize steering (0th dimension) and throttle (1st dimension) unequally
-    # return tf.reduce_mean(tf.square(y - y_est))
+    sample_weights = tf.constant(([0.7, 0.3]))
+    y = y * sample_weights
+    y_est = y_est * sample_weights
+    return tf.reduce_mean(tf.square(y - y_est))
     # return tf.math.reduce_euclidean_norm(tf.y_est - y)
-    kl = tf.keras.losses.KLDivergence()
-    l = kl(y, y_est)
-    # return tf.reduce_all(l)
-    return l
+    # kl = tf.keras.losses.KLDivergence()
+    # l = kl(y, y_est)
+    # # return tf.reduce_all(l)
+    # return l
     ########## Your code ends here ##########
     
 
