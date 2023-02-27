@@ -90,9 +90,9 @@ def loss(y_est, y):
     sample_weights = tf.constant(([0.8, 0.2]))
     y = y * sample_weights
     y_est = y_est * sample_weights
-    norm = tf.sqrt(tf.reduce_sum(tf.square(y - y_est), 1))
-    return tf.reduce_mean(norm)
-    # return tf.reduce_mean(tf.square(y - y_est))
+    # norm = tf.sqrt(tf.reduce_sum(tf.square(y - y_est), 1))
+    # return tf.reduce_mean(norm)
+    return tf.reduce_mean(tf.square(y - y_est))
     # return tf.math.reduce_euclidean_norm(tf.y_est - y)
     # kl = tf.keras.losses.KLDivergence()
     # l = kl(y, y_est)
