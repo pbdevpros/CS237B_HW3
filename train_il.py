@@ -18,16 +18,15 @@ class NN(tf.keras.Model):
         #         - tf.keras.initializers.GlorotNormal
         #         - tf.keras.initializers.he_uniform or tf.keras.initializers.he_normal
         initializer = tf.keras.initializers.GlorotUniform()
-        print("Size of dim(O) is: {}".format(in_size))
-        # self.layerCNNs = [
-        #     tf.keras.layers.Conv2D(32, 4, activation='relu'), # Conv layer with 32 3x3 filters
-        #     kernel_initializer=initializer
-
-        # ]
-        self.layer0 = tf.keras.layers.Flatten()
-        self.layer1 = tf.keras.layers.Dense(128, kernel_initializer=initializer)
-        self.layer2 = tf.keras.layers.Dropout(0.1)
-        self.layer3 = tf.keras.layers.Dense(64, kernel_initializer=initializer)
+        # in_size = 5
+        self.internal_layers = [
+            tf.keras.layers.Flatten(),
+            tf.keras.layers.Dense(1024, kernel_initializer=initializer),
+            # tf.keras.layers.Dropout(0.1),
+            tf.keras.layers.Dense(512, kernel_initializer=initializer),
+            # tf.keras.layers.Dropout(0.2),
+            tf.keras.layers.Dense(64, kernel_initializer=initializer),
+        ]
         self.layer_output = tf.keras.layers.Dense(out_size, kernel_initializer=initializer)
         ########## Your code ends here ##########
 
@@ -36,10 +35,9 @@ class NN(tf.keras.Model):
         ######### Your code starts here #########
         # We want to perform a forward-pass of the network. Using the weights and biases, this function should give the network output for x where:
         # x is a (?,|O|) tensor that keeps a batch of observations
-        x = self.layer0(x)
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
+        for i in range(len(self.internal_layers)):
+            layer = self.internal_layers[i]
+            x = layer(x)
         return self.layer_output(x)
         ########## Your code ends here ##########
 
