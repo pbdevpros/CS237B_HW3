@@ -134,8 +134,10 @@ TODO: Write out equation?
 
 %%%%%% Part (vi)
 
-\item
+\item It is possible to ensure that the covariance matrix is PSD by allowing the network to learning a matrix, $A$, such that $AA^T$ is the covariance. Thus the output of the network must be interpreted as $A$ and the creation of the covariance matrix can be performed inside the loss function, ensuring it is PSD. Note, the matrix $A$ could be represented as a column of 4 entries, which is then reshaped into a $2x2$ matrix. So in total the network would have 6 outputs, the 2 mean variables and 4 variables representing $A$.
 
+% (vii)
+\item 
 
 
 \end{enumerate}
@@ -149,8 +151,43 @@ TODO: Write out equation?
 
 \section*{Problem 3}
 \begin{enumerate}[label=(\roman*)]
+\item The problem with this policy is that the agent may exploit a particular trajectory/goal that will maximize the reward but limit itself to that trajectory/goal only. For example, it was observed when training with the goal of "all", the agent continuously veered left in intersection. It performed the turn correctly (achieving an accuracy of 1.0 without visualization), however it did not ever attempt to continue to the straight or right goals, so as a user trying to guide the agent it was not possible to control the trajectory. Thus, it found a local optima to increase it's reward and exploited this to achieve a higher accuracy.
+
 \item See code.
 
+\item The performance of the tests with respect to left, straight and right goals is listed below. Note that when the '--visualize' argument was used, it was indeed possible to direct the agent to a particular goal based on keyboard input of a command. \\
+
+After the first set of training with the above, the following was achieved: \\ 
+\begin{tabularx}{0.8\textwidth} { 
+  | >{\raggedright\arraybackslash}X 
+  | >{\centering\arraybackslash}X | }
+ \hline
+ Goal & Test Accuracy \\
+ \hline
+ left & 0.55 \\
+ \hline
+ right & 0.41  \\
+ \hline
+ straight & 0.44 \\
+\hline
+\end{tabularx} \\
+
+Running for another 50 epochs, restoring the same weights achieved:\\
+\begin{tabularx}{0.8\textwidth} { 
+  | >{\raggedright\arraybackslash}X 
+  | >{\centering\arraybackslash}X | }
+ \hline
+ Goal & Test Accuracy \\
+ \hline
+ left & 0.94 \\
+ \hline
+ right & 0.52  \\
+ \hline
+ straight & 0.86 \\
+\hline
+\end{tabularx} \\ 
+
+\item The network was composed of several modules which were all fully connected layers. The first module was for processing the observations. This consisted of two densely connected layers, with 24 and 8 units respectively. Three modules, all consisting of fully connected 8 units were then included for each command: left, straight and right. Based on the command input, the outputs from the observation module was passed into one of these three modules. These modules were all connected to a layer with 2 units, the output layer. In all cases, the the layers were initialized with Xavier initialization and used ReLU activation functions. The loss function used was the mean squared error (MSE), where the error was calculated between the true actions and the two actions output by the network. The learning rate used was 0.002 and the number of epochs were 100. The restore flag was not used in the training.
 
 \end{enumerate}
 
